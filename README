@@ -1,4 +1,4 @@
-django-rest-framework kata to show one-to-many and many-to-many relationships in action
+kata to show one-to-many and many-to-many relationships in action
 
 To get started you need to install the requirements and syncdb
 
@@ -9,6 +9,10 @@ To run the first suite of unit tests
 
 python manage.py test ember
 
+As you complete the kata you will need the api documentation
+
+http://django-rest-framework.org/
+
 The goal of this kata is to get everything in the tests.py passing by adding
 
 1.) the needed routes for each django model under test
@@ -17,14 +21,14 @@ The goal of this kata is to get everything in the tests.py passing by adding
 2.) the needed class based rest-framework views
 **start by looking here => codecamp/ember/views.py
 
-3.) adding the required rest-framework serializers
+3.) the needed rest-framework serializers
 **start by looking here => codecamp/ember/serializers.py
 
 When you have the basic set of tests passing in tests.py it's time for the advanced stuff
 
 1.) remove the tests.py (not needed anymore)
 2.) rename the file in codecamp/ember/advanced_tests.py to tests.py
-3.) python manage.py test ember to start the new suite of failing tests
+3.) run "python manage.py test ember" to start the next suite of failing tests
 
 The goal of the advanced kata is to get the tests.py passing by adding
 
