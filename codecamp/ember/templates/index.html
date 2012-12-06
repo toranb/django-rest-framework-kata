@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<title>Code Camp</title>
+<link href="{{ STATIC_URL }}css/default.css" rel="stylesheet" type="text/css">
+<body>
+{% load templatetag_handlebars %}
+{% verbatim %}
+
+<script type="text/x-handlebars" data-template-name="application">
+{{outlet}}
+</script>
+
+<script type="text/x-handlebars" data-template-name="sessions">
+{{#each session in controller}}
+  {{session.name}}<br />
+  {{#each speaker in session.speakers}}
+    {{speaker.name}}<br />
+    <a {{action showSessionDetails session href=true}}>View Session Details</a><br />
+  {{/each}}
+  {{#each tag in session.tags}}
+    {{tag.description}}<br />
+  {{/each}}
+{{/each}}
+</script>
+
+<script type="text/x-handlebars" data-template-name="session">
+{{content.name}}<br />
+  {{#each speaker in content.speakers}}
+    <a {{action showSpeakerDetails speaker href=true}}>View Speaker Details</a><br />
+  {{/each}}
+  {{#each rating in content.ratings}}
+    {{rating.score}}<br />
+    {{rating.feedback}}<br/>
+  {{/each}}
+  <br />
+  {{view Ember.TextField placeholder="score" valueBinding="view.score"}}
+  {{view Ember.TextField placeholder="feedback" valueBinding="view.feedback"}}
+  <a {{action addRating content target="parentView" href=true}}>add rating</a>
+</script>
+
+<script type="text/x-handlebars" data-template-name="speaker">
+  {{content.name}}
+</script>
+
+{% endverbatim %}
+<script src="{{ STATIC_URL }}script/vendor/jquery-1.7.2.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}script/vendor/handlebars-1.0.0.beta.6.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}script/vendor/ember-1.0.0-pre.2.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}script/vendor/ember-data-latest.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}script/vendor/adapter.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}script/app/codecamp.js" type="text/javascript"></script>
+</body>
+</html>
