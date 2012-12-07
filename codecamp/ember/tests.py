@@ -93,7 +93,7 @@ class TagTests(TestCase):
     def test_tags_json_returns_last_tag_json(self):
         response = self.client.get('/codecamp/tags/')
         speakers = json.loads(response.content)
-        self.assertEqual(speakers[0]['description'], 'javascript')
+        self.assertEqual(speakers[1]['description'], 'python')
 
     def test_detail_tags_endpoint_returns_attributes_for_given_tag_id(self):
         response = self.client.get('/codecamp/tags/{}/'.format(self.first_tag.pk))
@@ -148,20 +148,20 @@ class SpeakerTests(TestCase):
         self.last_speaker.save()
 
     def test_will_return_json_with_list_of_speakers(self):
-        response = self.client.get('/codecamp/speakers/')
+        response = self.client.get('/codecamp/speakers')
         speakers = json.loads(response.content)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(speakers), 2)
 
     def test_speakers_json_has_an_attribute_for_each_item(self):
-        response = self.client.get('/codecamp/speakers/')
+        response = self.client.get('/codecamp/speakers')
         speakers = json.loads(response.content)
         self.assertEqual(speakers[0]['name'], 'foo')
 
     def test_speakers_json_returns_last_speaker_json(self):
-        response = self.client.get('/codecamp/speakers/')
+        response = self.client.get('/codecamp/speakers')
         speakers = json.loads(response.content)
-        self.assertEqual(speakers[0]['name'], 'foo')
+        self.assertEqual(speakers[1]['name'], 'bar')
 
     def test_detail_speakers_endpoint_returns_attributes_for_given_speaker_id(self):
         response = self.client.get('/codecamp/speakers/{}/'.format(self.first_speaker.pk))
@@ -170,17 +170,17 @@ class SpeakerTests(TestCase):
 
     def test_http_post_will_create_speaker_and_return_201(self):
         data = {'name': 'who'}
-        response = self.client.post('/codecamp/speakers/', data)
+        response = self.client.post('/codecamp/speakers', data)
         self.assertEqual(response.status_code, 201)
 
     def test_http_post_will_create_speaker_and_return_created_speaker_json(self):
         data = {'name': 'who'}
-        response = self.client.post('/codecamp/speakers/', data)
+        response = self.client.post('/codecamp/speakers', data)
         created_speaker = json.loads(response.content)
         self.assertEqual(created_speaker['name'], 'who')
 
     def test_http_post_without_data_returns_400(self):
-        response = self.client.post('/codecamp/speakers/', {})
+        response = self.client.post('/codecamp/speakers', {})
         self.assertEqual(response.status_code, 400)
 
     def test_http_put_will_update_first_speaker_and_return_200(self):

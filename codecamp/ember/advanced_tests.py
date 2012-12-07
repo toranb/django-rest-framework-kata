@@ -5,7 +5,7 @@ from codecamp.ember.models import Session, Speaker, Rating, Tag
 
 def add_sessions_ratings_speakers_and_tags():
     first_tag = Tag(description='javascript')
-    last_tag = Tag(description='ember-js')
+    last_tag = Tag(description='python')
     first_tag.save()
     last_tag.save()
     first_session = Session(name='first', room='A', desc='javascript')
@@ -58,6 +58,7 @@ class SessionTests(TestCase):
         ratings = [self.first_rating.pk, self.last_rating.pk]
         self.assertEqual(sessions[0]['ratings'], ratings)
         self.assertEqual(sessions[1]['ratings'], [])
+        #hint -learn more about ManyPrimaryKeyRelatedField
 
     def test_http_get_will_return_list_of_session_json_including_speaker_ids(self):
         response = self.client.get('/codecamp/sessions')
@@ -66,6 +67,7 @@ class SessionTests(TestCase):
         last_speakers = [self.last_speaker.pk]
         self.assertEqual(sessions[0]['speakers'], first_speakers)
         self.assertEqual(sessions[1]['speakers'], last_speakers)
+        #hint -learn more about ManyPrimaryKeyRelatedField
 
     def test_http_put_will_update_first_session_and_return_200(self):
         data = {'name': 'updated name', 'room': 'updated room', 'desc': 'updated desc'}
@@ -127,19 +129,19 @@ class RatingTests(TestCase):
 
     def test_http_post_will_create_rating_and_return_201(self):
         data = {'score': 9, 'feedback': 'nice try', 'session': self.last_session.pk}
-        response = self.client.post('/codecamp/sessions/{}/ratings/'.format(self.last_rating.pk), data)
+        response = self.client.post('/codecamp/sessions/{}/ratings/'.format(self.last_session.pk), data)
         self.assertEqual(response.status_code, 201)
 
     def test_http_post_will_create_rating_and_return_created_rating_json(self):
         data = {'score': 9, 'feedback': 'nice try', 'session': self.last_session.pk}
-        response = self.client.post('/codecamp/sessions/{}/ratings/'.format(self.last_rating.pk), data)
+        response = self.client.post('/codecamp/sessions/{}/ratings/'.format(self.last_session.pk), data)
         created_rating = json.loads(response.content)
         self.assertEqual(created_rating['score'], 9)
         self.assertEqual(created_rating['feedback'], 'nice try')
         self.assertEqual(created_rating['session'], self.last_session.pk)
 
     def test_http_post_without_data_returns_400(self):
-        response = self.client.post('/codecamp/sessions/{}/ratings/'.format(self.last_rating.pk), {})
+        response = self.client.post('/codecamp/sessions/{}/ratings/'.format(self.last_session.pk), {})
         self.assertEqual(response.status_code, 400)
 
     def test_http_put_will_update_first_rating_and_return_200(self):
@@ -198,18 +200,18 @@ class SpeakerTests(TestCase):
 
     def test_http_post_will_create_speaker_and_return_201(self):
         data = {'name': 'foo', 'session': self.last_session.pk}
-        response = self.client.post('/codecamp/sessions/{}/speakers/'.format(self.last_rating.pk), data)
+        response = self.client.post('/codecamp/sessions/{}/speakers/'.format(self.last_session.pk), data)
         self.assertEqual(response.status_code, 201)
 
     def test_http_post_will_create_speaker_and_return_created_speaker_json(self):
         data = {'name': 'foo', 'session': self.last_session.pk}
-        response = self.client.post('/codecamp/sessions/{}/speakers/'.format(self.last_rating.pk), data)
+        response = self.client.post('/codecamp/sessions/{}/speakers/'.format(self.last_session.pk), data)
         created_speaker = json.loads(response.content)
         self.assertEqual(created_speaker['name'], 'foo')
         self.assertEqual(created_speaker['session'], self.last_session.pk)
 
     def test_http_post_without_data_returns_400(self):
-        response = self.client.post('/codecamp/sessions/{}/speakers/'.format(self.last_rating.pk), {})
+        response = self.client.post('/codecamp/sessions/{}/speakers/'.format(self.last_session.pk), {})
         self.assertEqual(response.status_code, 400)
 
     def test_http_put_will_update_first_speaker_and_return_200(self):
@@ -256,7 +258,7 @@ class TagTests(TestCase):
     def test_tags_json_returns_last_tag_json_given_last_session_id(self):
         response = self.client.get('/codecamp/sessions/{}/tags/'.format(self.last_session.pk))
         speakers = json.loads(response.content)
-        self.assertEqual(speakers[0]['description'], 'ember-js')
+        self.assertEqual(speakers[0]['description'], 'python')
 
     def test_detail_tags_endpoint_returns_attributes_for_given_tag_id(self):
         response = self.client.get('/codecamp/tags/{}/'.format(self.first_tag.pk))
@@ -273,7 +275,6 @@ class TagTests(TestCase):
         response = self.client.post('/codecamp/sessions/{}/tags/'.format(self.last_session.pk), data)
         created_tag = json.loads(response.content)
         self.assertEqual(created_tag['description'], 'new')
-        #self.assertEqual(created_tag['session'], self.last_session.pk) #this will always fail as-is
 
     def test_http_post_without_data_returns_400(self):
         response = self.client.post('/codecamp/sessions/{}/tags/'.format(self.last_session.pk), {})
